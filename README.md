@@ -39,4 +39,6 @@ Este projeto não usa bundler nem Node — basta abrir o arquivo `index.html` no
 Se quiser rodar em ambiente local, clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/LeonardoFranchi/calculator-react.git
+```
+Desenvolvido por <a href="https://github.com/LeonardoFranchi">Leonardo Grizolia</a>
