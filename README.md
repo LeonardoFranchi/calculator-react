@@ -30,8 +30,6 @@ Uma calculadora simples, moderna e responsiva desenvolvida em **React**, com est
 
 <img src="./screenshot.png" alt="Calculadora em React" width="500"/>
 
-*(substitua `screenshot.png` pela imagem real no repositório)*
-
 ---
 
 ## 📦 Instalação e Execução
