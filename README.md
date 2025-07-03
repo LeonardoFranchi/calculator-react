@@ -34,7 +34,7 @@ Uma calculadora simples, moderna e responsiva desenvolvida em **React**, com est
 
 ## 📦 Instalação e Execução
 
-Este projeto não usa bundler nem Node — basta abrir o arquivo `index.html` no navegador.
+Este projeto não usa bundler nem Node — basta abrir o arquivo `calculadora.html` no navegador.
 
 Se quiser rodar em ambiente local, clone o repositório:
 
