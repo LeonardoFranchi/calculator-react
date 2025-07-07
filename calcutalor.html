@@ -132,6 +132,11 @@
         }
 
         function Calculator({ children }){ // interface da calculadora
+
+            function handleInputClick(input){ // função para lidar com o clique dos botões
+                console.log(input);
+            }
+
             return(
                 <Card className="flex flex-col gap-[1.625rem] w-[22.22rem] pt-14 px-8 pb-8 mt-15 sm:mt-0">
                     <CalculatorDisplay operation="1 + 1" result="2" />
@@ -139,7 +144,13 @@
                         {buttons.map((row, index) => (
                         <div key={`row-${index}`} className="flex gap-3">
                             {row.map(button => (
-                                <Button key={button.input} className={button.className || "w-16 h-16"} variant={button.variant}>{button.input}</Button>
+                                <Button key={button.input}
+                                className={button.className || "w-16 h-16"}
+                                variant={button.variant}
+                                onClick={() => handleInputClick(button.input)}
+                                >
+                                {button.input}
+                                </Button>
                             ))}    
                         </div>))}
                         
