@@ -95,7 +95,7 @@
                 { input: "7" },
                 { input: "8" },
                 { input: "9" },
-                { input: "x", variant: "primary"}
+                { input: "*", variant: "primary"}
             ],
             [
                 { input: "4" },
@@ -119,13 +119,13 @@
         function CalculatorDisplay({ operation, result }){ // componente display da calculadora
             return(
                 <div className="flex flex-col gap-2 px-[1.375rem] cursor-default select-none">
-                    <Text as="div" variant="muted" className="flex items-center justify-end">
-                        {operation}
+                    <Text as="div" variant="muted" className="flex items-center justify-end h-7">
+                        {result && operation}
                     </Text>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between h-9">
                         <Text variant="muted">=</Text>
-                        <Text variant="blast">{result}</Text>
+                        <Text variant="blast">{result || operation}</Text>
                     </div>
                 </div>
             )
@@ -133,13 +133,48 @@
 
         function Calculator({ children }){ // interface da calculadora
 
+            const [operation, setOperation] = React.useState('');
+            const [result, setResult] = React.useState('');
+
             function handleInputClick(input){ // função para lidar com o clique dos botões
-                console.log(input);
+
+                if (input === "CE"){ // aplica funcionalidade ao botão 'CE' voltando o ultimo calculo ao display
+                    setResult("")
+                    setOperation(operation.slice(0, -1)); // volta 1 indice
+                    return;
+                }
+
+                if (input === "C"){ // aplica funcionalidade ao botão 'C' apagando o operador e o resultado
+                    setOperation("");
+                    setResult("");
+                    return;
+                }
+
+
+                if (input === "="){ // aplica funcionalidade ao '=' e faz os cálculos
+                    const operationResult = eval(operation.replace(/,/g, '.')); // eval() executa js em uma string, assim fazendo o cálculo /  .replace transforma ',' em '.'
+                    const parsedResult = operationResult.toString()?.replace(/\./g, ','); // transforma o '.' em ',' novamente para mostrar o resultado
+                    setResult(parsedResult) // exibe o resultado com ','
+                    return;
+                }
+
+                if (result) { // faz com que se possa continuar a conta a partir do resultado de uma outra
+                    setOperation(isNaN(input) ? `${result}${input}` : input);
+                    setResult("");
+                    return;
+                }
+
+                if (input === "," && !operation.endsWith(',')){ // faz o cálculo de números decimais
+                    setOperation(`${operation},`);
+                    return;
+                }
+
+                setOperation(`${operation}${input}`); // coloca os valores na tela
             }
 
             return(
                 <Card className="flex flex-col gap-[1.625rem] w-[22.22rem] pt-14 px-8 pb-8 mt-15 sm:mt-0">
-                    <CalculatorDisplay operation="1 + 1" result="2" />
+                    <CalculatorDisplay operation={operation} result={result} />
                     <div className="flex flex-col gap-3">
                         {buttons.map((row, index) => (
                         <div key={`row-${index}`} className="flex gap-3">
