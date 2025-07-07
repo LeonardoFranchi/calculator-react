@@ -50,7 +50,7 @@
             blast: `text-3xl`
         }
 
-        function Text({ as =`span`, variant = `default`, className, children, ...props }){
+        function Text({ as =`span`, variant = `default`, className, children, ...props }){ // componente dinâmico para criação de tags com texto
             return React.createElement(
                 as,
                 {
@@ -65,7 +65,7 @@
             default: 'bg-(--background)',
             primary: 'bg-(--primary)'
         }
-        function Button({ className, children, variant = 'default', ...props}){
+        function Button({ className, children, variant = 'default', ...props}){ // componentes dos botões
             return(
                 <Text as="button"
                 variant="heading"
@@ -76,7 +76,7 @@
             );
         }
 
-        function Card({ children, className, ...props }){
+        function Card({ children, className, ...props }){ // fundo do projeto
             return(
                 <div className={`bg-(--background) shadow-(--shadow) rounded-2xl ${className ? className : ''}`} {...props}
                 >
@@ -85,7 +85,38 @@
             );
         }
 
-        function CalculatorDisplay({ operation, result }){
+        const buttons =[
+            [
+                { input: "CE" },
+                { input: "C", className: "flex-1 h-16"},
+                { input: "/", variant: "primary"}
+            ],
+            [
+                { input: "7" },
+                { input: "8" },
+                { input: "9" },
+                { input: "x", variant: "primary"}
+            ],
+            [
+                { input: "4" },
+                { input: "5" },
+                { input: "6" },
+                { input: "—",  variant: "primary" }
+            ],
+            [
+                { input: "1" },
+                { input: "2" },
+                { input: "3" },
+                { input: "+",  variant: "primary" }
+            ],
+            [
+               { input: "0", className: "flex-1 h-16" },
+               { input: "," },
+               { input: "=", className: "w-16 h=16 bg-[#7F45E2]" }
+            ]
+        ];
+
+        function CalculatorDisplay({ operation, result }){ // componente display da calculadora
             return(
                 <div className="flex flex-col gap-2 px-[1.375rem] cursor-default select-none">
                     <Text as="div" variant="muted" className="flex items-center justify-end">
@@ -100,46 +131,24 @@
             )
         }
 
-        function Calculator({ children }){
+        function Calculator({ children }){ // interface da calculadora
             return(
                 <Card className="flex flex-col gap-[1.625rem] w-[22.22rem] pt-14 px-8 pb-8 mt-15 sm:mt-0">
                     <CalculatorDisplay operation="1 + 1" result="2" />
                     <div className="flex flex-col gap-3">
-                        <div className="flex gap-3">
-                            <Button className="w-16 h-16">CE</Button>
-                            <Button className="flex-1 h-16">C</Button>
-                            <Button className="w-16 h-16" variant="primary">/</Button>
-                        </div>
-                        <div className="flex gap-3">
-                            <Button className="w-16 h-16">7</Button>
-                            <Button className="w-16 h-16">8</Button>
-                            <Button className="w-16 h-16">9</Button>
-                            <Button className="w-16 h-16" variant="primary">x</Button>
-                        </div>
-                        <div className="flex gap-3">
-                            <Button className="w-16 h-16">4</Button>
-                            <Button className="w-16 h-16">5</Button>
-                            <Button className="w-16 h-16">6</Button>
-                            <Button className="w-16 h-16" variant="primary">—</Button>
-                        </div>
-                        <div className="flex gap-3">
-                            <Button className="w-16 h-16">1</Button>
-                            <Button className="w-16 h-16">2</Button>
-                            <Button className="w-16 h-16">3</Button>
-                            <Button className="w-16 h-16" variant="primary">+</Button>
-                        </div>
-                        <div className="flex gap-3">
-                            <Button className="flex-1 w-16 h-16">0</Button>
-                            <Button className="w-16 h-16">,</Button>
-                            <Button className="w-16 h-16" variant="primary">=</Button>
-                        </div>
-
+                        {buttons.map((row, index) => (
+                        <div key={`row-${index}`} className="flex gap-3">
+                            {row.map(button => (
+                                <Button key={button.input} className={button.className || "w-16 h-16"} variant={button.variant}>{button.input}</Button>
+                            ))}    
+                        </div>))}
+                        
                     </div>
                 </Card>
             )
         }
-        
-        function OperationHistory({ children }){
+
+        function OperationHistory({ children }){ // interface do histórico
             return(
                 <Card className="py-10 px-8 w-[22.22rem]">
                     <Text as="h1" variant="heading" className="mb-4">Histórico de Operações</Text>
@@ -152,7 +161,7 @@
             )
         }
 
-        function App(){
+        function App(){ // exibir os componentes criados
             return(
                 <main className="py-28 px-4
                 flex flex-col
