@@ -116,6 +116,21 @@
             ]
         ];
 
+        const CalculatorContext = React.createContext();
+        function CalculatorProvider({ children }){ // api de contexto criada para atualizar o Histórico de Operações
+            const [history, setHistory] = React.useState([]);
+
+            function updateHistory(operation, parsedResult){
+                setHistory((prev) => [...prev, `${operation}=${parsedResult}`])
+            }
+
+            return(
+                <CalculatorContext.Provider value={{history, updateHistory}}>
+                    { children }    
+                </CalculatorContext.Provider>
+            )
+        }
+
         function CalculatorDisplay({ operation, result }){ // componente display da calculadora
             return(
                 <div className="flex flex-col gap-2 px-[1.375rem] cursor-default select-none">
@@ -135,6 +150,7 @@
 
             const [operation, setOperation] = React.useState('');
             const [result, setResult] = React.useState('');
+            const { updateHistory } = React.useContext(CalculatorContext); // chama a função do contexto
 
             function handleInputClick(input){ // função para lidar com o clique dos botões
 
@@ -155,6 +171,7 @@
                     const operationResult = eval(operation.replace(/,/g, '.')); // eval() executa js em uma string, assim fazendo o cálculo /  .replace transforma ',' em '.'
                     const parsedResult = operationResult.toString()?.replace(/\./g, ','); // transforma o '.' em ',' novamente para mostrar o resultado
                     setResult(parsedResult) // exibe o resultado com ','
+                    updateHistory(operation, parsedResult); // usa a função do contexto
                     return;
                 }
 
@@ -195,14 +212,22 @@
         }
 
         function OperationHistory({ children }){ // interface do histórico
-            return(
+
+            const { history } = React.useContext(CalculatorContext);
+
+            return( // renderizando os valores do Context na tela
                 <Card className="py-10 px-8 w-[22.22rem]">
-                    <Text as="h1" variant="heading" className="mb-4">Histórico de Operações</Text>
-                    <ul className="flex flex-col gap-3">
-                        <Text as="li">1 + 1 = 2</Text> 
-                        <Text as="li">1 + 1 = 2</Text> 
-                        <Text as="li">1 + 1 = 2</Text> 
+                    <Text as="h1" variant="heading" className="mb-4">Histórico de Operações</Text> 
+                    {history.length > 0 ? ( // se houver histórico mostre
+
+                        <ul className="flex flex-col gap-3">
+                        {history.map((value, index) => <Text key={`item-${index}`} as="li">{value}</Text> )}
                     </ul>
+
+                    ) : ( // se não houver, mostre essa frase
+                        <Text as="p" variant="muted">Nenhuma Operação recente</Text>
+                    )}
+                    
                 </Card>
             )
         }
@@ -215,8 +240,10 @@
                 items-center sm:items-stretch
                 justify-center
                 ">
-                    <Calculator />
-                    <OperationHistory />
+                    <CalculatorProvider>
+                        <Calculator />
+                        <OperationHistory />
+                    </CalculatorProvider>
                 </main>
             )
         }
