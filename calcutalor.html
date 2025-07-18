@@ -119,9 +119,21 @@
         const CalculatorContext = React.createContext();
         function CalculatorProvider({ children }){ // api de contexto criada para atualizar o Histórico de Operações
             const [history, setHistory] = React.useState([]);
+            const historyStorageKey = 'history';
+
+            React.useEffect(() => {
+                const savedHistory = localStorage.getItem(historyStorageKey);
+                setHistory(JSON.parse(savedHistory || '[]'))
+            },[]);
 
             function updateHistory(operation, parsedResult){
-                setHistory((prev) => [...prev, `${operation}=${parsedResult}`])
+                setHistory((prev) => {
+                    const updatedHistory = [...prev, `${operation}=${parsedResult}`];
+
+                    localStorage.setItem(historyStorageKey, JSON.stringify(updatedHistory)) // adicionando o histórico no LocalStorage
+
+                    return updatedHistory;
+                })
             }
 
             return(
