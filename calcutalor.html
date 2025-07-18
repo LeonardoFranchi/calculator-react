@@ -143,29 +143,12 @@
             )
         }
 
-        function CalculatorDisplay({ operation, result }){ // componente display da calculadora
-            return(
-                <div className="flex flex-col gap-2 px-[1.375rem] cursor-default select-none">
-                    <Text as="div" variant="muted" className="flex items-center justify-end h-7">
-                        {result && operation}
-                    </Text>
-
-                    <div className="flex items-center justify-between h-9">
-                        <Text variant="muted">=</Text>
-                        <Text variant="blast">{result || operation}</Text>
-                    </div>
-                </div>
-            )
-        }
-
-        function Calculator({ children }){ // interface da calculadora
-
+        function useCalculator() {
             const [operation, setOperation] = React.useState('');
             const [result, setResult] = React.useState('');
             const { updateHistory } = React.useContext(CalculatorContext); // chama a função do contexto
 
-            function handleInputClick(input){ // função para lidar com o clique dos botões
-
+            function doOperation(input){
                 if (input === "CE"){ // aplica funcionalidade ao botão 'CE' voltando o ultimo calculo ao display
                     setResult("")
                     setOperation(operation.slice(0, -1)); // volta 1 indice
@@ -199,6 +182,34 @@
                 }
 
                 setOperation(`${operation}${input}`); // coloca os valores na tela
+            }
+            return {
+                operation,
+                result,
+                doOperation
+            }
+        }
+
+        function CalculatorDisplay({ operation, result }){ // componente display da calculadora
+            return(
+                <div className="flex flex-col gap-2 px-[1.375rem] cursor-default select-none">
+                    <Text as="div" variant="muted" className="flex items-center justify-end h-7">
+                        {result && operation}
+                    </Text>
+
+                    <div className="flex items-center justify-between h-9">
+                        <Text variant="muted">=</Text>
+                        <Text variant="blast">{result || operation}</Text>
+                    </div>
+                </div>
+            )
+        }
+
+        function Calculator({ children }){ // interface da calculadora 
+            const { operation, result, doOperation} = useCalculator();
+
+            function handleInputClick(input){ // função para lidar com o clique dos botões
+                doOperation(input);
             }
 
             return(
